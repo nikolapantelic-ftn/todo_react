@@ -44,7 +44,6 @@ export default class TodoApp extends React.Component {
 
     handleSubmit(e){
         e.preventDefault();
-        console.log("submit");
         let JWTToken = localStorage.getItem('JWTToken');
         axios.post('http://127.0.0.1:8000/api/todo',  { 
             title: this.state.title,
@@ -52,8 +51,12 @@ export default class TodoApp extends React.Component {
             priority: 1,
             is_done: 0
             }, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
-            .then(function (response) {
+            .then(response => {
                 console.log(response);
+                this.setState({
+                    title: '',
+                    content: ''
+                });
             })
             .catch(function (error) {
                 console.log(error);
@@ -102,7 +105,6 @@ export default class TodoApp extends React.Component {
     render(){
         return(
             <div className="d-flex justify-content-center">
-                <h1>Todo:</h1>
                 <div className="col-sm-4 scroll">
                         {this.state.items.map((item, index) => this.renderItem(item, index))}
                 </div>
@@ -266,8 +268,8 @@ class Item extends React.Component {
                     <option value="1">Medium</option>
                     <option value="2">Low</option>
                 </select>
-                <input 
-                className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
+                <label htmlFor="isDone">Done</label>
+                <input className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
             </div>
         );
     }
@@ -289,12 +291,8 @@ class Item extends React.Component {
                     <option value="1">Medium</option>
                     <option value="2">Low</option>
                 </select>
-                <input 
-                className="form-check-input" 
-                type="checkbox"  
-                id="isDone"
-                checked={this.state.isDone}
-                onChange={this.handleCheckboxChange}/>
+                <label htmlFor="isDone">Done</label>
+                <input className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
             </div>
         );
     }

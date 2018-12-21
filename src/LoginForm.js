@@ -34,11 +34,12 @@ export default class LoginForm extends React.Component {
             email: this.state.email,
             password: this.state.password
         })
-        .then(function (response) {
+        .then(response => {
             console.log(response);
             localStorage.setItem('JWTToken', response.data.access_token);
             axios.defaults.headers['Authorization'] = `Bearer ${response.data.access_token}`
             alert('Success!');
+            this.props.handleLogin();
         })
         .catch(function (error) {
             console.log(error);

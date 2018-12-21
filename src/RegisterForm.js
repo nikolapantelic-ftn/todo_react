@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom'
 
 export default class RegisterForm extends React.Component {
     constructor(props) {
@@ -9,6 +10,7 @@ export default class RegisterForm extends React.Component {
             email: '',
             password: '',
             confirmPassword: '',
+            redirect: false
         };
         this.handleNameInput = this.handleNameInput.bind(this);
         this.handlePasswordInput = this.handlePasswordInput.bind(this);
@@ -61,32 +63,35 @@ export default class RegisterForm extends React.Component {
                 password: this.state.password,
                 password_confirmation: this.state.confirmPassword,
             })
-            .then(function (response) {
+            .then(response=> {
                 console.log(response);
                 alert('Success!');
+                this.setState({
+                    redirect: true
+                });
+
             })
             .catch(function (error) {
                 console.log(error);
                 alert(error);
             });
             
-
-            axios.get('/')
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.log(error);
-            });
         }else{
             this.refs.email.reportValidity();
             this.refs.password.reportValidity();
             this.refs.passwordConfirm.reportValidity();
         }
     }
+
+    renderRedirect() {
+        if (this.state.redirect) {
+          return(<Redirect to='/'/>);
+        }
+    }
     render() {
         return (
             <div className="d-flex justify-content-center">
+            {this.renderRedirect()}
                 <form onSubmit={this.handleSubmit}>
                     <div className="col">
                         <div>
