@@ -135,7 +135,7 @@ class Item extends React.Component {
             title: props.item.title,
             content: props.item.content,
             priority: props.item.priority,
-            isDone: props.item.isDone,
+            isDone: props.item.is_done,
             createdAt: props.item.createdAt,
             updatedAt: props.item.updatedAt,
             editMode: false,
@@ -169,6 +169,7 @@ class Item extends React.Component {
             isDone: event.target.checked ? 1 : 0
         });
         this.submitCheckboxChange(event.target.checked);
+        console.log(event.target.checked);
     }
 
     handleSavePress() {
