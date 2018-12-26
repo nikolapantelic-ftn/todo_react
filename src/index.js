@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import { BrowserRouter as Router, Route} from "react-router-dom";
-import axios from 'axios';
+import { BrowserRouter as Router, Route} from 'react-router-dom';
+import { apiService } from './services/ApiService';
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import TodoApp from './TodoApp';
@@ -19,27 +19,23 @@ class Index extends React.Component {
     }
 
     componentDidMount() {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.post('http://127.0.0.1:8000/api/me', {},
-        { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+        apiService.getUser()
             .then(response => {
                 this.setState({
                     loggedIn: true,
                     name: response.data.name
-                })
+                });
             })
             .catch(function (error) {});
     }
 
     handleLogout() {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.post('http://127.0.0.1:8000/api/logout', {},
-        { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+        apiService.logout()
             .then(response => {
                 this.setState({
                     loggedIn: false,
                     name: ""
-                })
+                });
             })
             .catch(function (error) {
                 console.log(error);
@@ -48,11 +44,15 @@ class Index extends React.Component {
     }
 
     handleLogin() {
-        this.setState({
-            loggedIn: true,
-        })
+        apiService.getUser()
+            .then(response => {
+                this.setState({
+                    loggedIn: true,
+                    name: response.data.name
+                });
+            })
+            .catch(function (error) {});
     }
-
 
     render() {
         return (
@@ -69,7 +69,7 @@ class Index extends React.Component {
                             <TodoApp
                             handleLogin={this.handleLogin}
                             />
-                        ):(
+                        ) : (
                             <LoginForm 
                             handleLogin={this.handleLogin}
                             />
