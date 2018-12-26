@@ -178,18 +178,10 @@ class Item extends React.Component {
     }
 
     handleCheckboxChange(event){
-        let done = event.target.checked
-        if(done){
-            this.setState({
-                isDone: 1
-            });
-        }else {
-            this.setState({
-                isDone: 0
-            });
-        }
-        console.log(this.state.isDone);
-        this.submitCheckboxChange(done);
+        this.setState({
+            isDone: event.target.checked ? 1 : 0
+        });
+        this.submitCheckboxChange(event.target.checked);
     }
 
     handleEditPress(){
@@ -266,58 +258,42 @@ class Item extends React.Component {
         this.props.handleItemDelete(this.props.index);
     }
 
-    renderViewMode(){
-        return(
-            <div className="col">
-                <h3>{this.state.title}</h3>
-                <div className="row">
-                <div className="col">
-                <p>{this.state.content}</p>
-                </div>
-                <div className="col">
-                <button id="edit" type="button" className="btn btn-primary" onClick={this.handleEditPress}>Edit</button>
-                <button id="delete" type="button" className="btn btn-danger" onClick={this.handleDeletePress}>Delete</button>
-                </div>
-                </div>
-                <select id="priority" className="form-control form-control-lg" defaultValue={this.state.priority} onChange={this.handlePriorityChange}>
-                    <option value="0">High</option>
-                    <option value="1">Medium</option>
-                    <option value="2">Low</option>
-                </select>
-                <label htmlFor="isDone">Done</label>
-                <input className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
-            </div>
-        );
-    }
-
-    renderEditMode(){
-        return(
-            <div className="col">
-                <input type="text" className="form-control" id="title" value={this.state.title} onChange={this.handleTitleChange}/>
-                <div className="row">
-                <div className="col">
-                <textarea className="form-control" rows="3" id="content" value={this.state.content} onChange={this.handleContentChange}/>
-                </div>
-                <div className="col">
-                <button id="save" type="button" className="btn btn-success" onClick={this.handleSavePress}>Save</button>
-                </div>
-                </div>
-                <select id="priority" className="form-control form-control-lg" defaultValue={this.state.priority} onChange={this.handlePriorityChange}>
-                    <option value="0">High</option>
-                    <option value="1">Medium</option>
-                    <option value="2">Low</option>
-                </select>
-                <label htmlFor="isDone">Done</label>
-                <input className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
-            </div>
-        );
-    }
-
     render(){
-        if(this.state.editMode){
-            return(this.renderEditMode());
-        }else{
-            return(this.renderViewMode());
-        }    
+        return(
+            <div className="col">
+                {this.state.editMode ? (
+                    <input type="text" className="form-control" id="title" value={this.state.title} onChange={this.handleTitleChange}/>
+                ) : (
+                    <h3>{this.state.title}</h3>
+                )}
+                <div className="row">
+                <div className="col">
+                {this.state.editMode ? (
+                    <textarea className="form-control" rows="3" id="content" value={this.state.content} onChange={this.handleContentChange}/>
+                ) : (
+                    <p>{this.state.content}</p>
+                )}
+                </div>
+                <div className="col">
+                {this.state.editMode ? (
+                    <button id="save" type="button" className="btn btn-success" onClick={this.handleSavePress}>Save</button>
+                ) : (
+                    <div>
+                        <button id="edit" type="button" className="btn btn-primary" onClick={this.handleEditPress}>Edit</button>
+                        <button id="delete" type="button" className="btn btn-danger" onClick={this.handleDeletePress}>Delete</button>
+                    </div>
+                )}
+                
+                </div>
+                </div>
+                <select id="priority" className="form-control form-control-lg" defaultValue={this.state.priority} onChange={this.handlePriorityChange}>
+                    <option value="0">High</option>
+                    <option value="1">Medium</option>
+                    <option value="2">Low</option>
+                </select>
+                <label htmlFor="isDone">Done</label>
+                <input className="form-check-input" type="checkbox" id="isDone" checked={this.state.isDone} onChange={this.handleCheckboxChange}/>
+            </div>
+        );
     }
 }
