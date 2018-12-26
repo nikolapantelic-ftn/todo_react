@@ -8,7 +8,7 @@ import TodoApp from './TodoApp';
 import Navbar from './Navbar';
 
 class Index extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             loggedIn: false,
@@ -18,7 +18,7 @@ class Index extends React.Component {
         this.handleLogin = this.handleLogin.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.post('http://127.0.0.1:8000/api/me', {},
         { headers: {"Authorization" : `Bearer ${JWTToken}`} })
@@ -31,7 +31,7 @@ class Index extends React.Component {
             .catch(function (error) {});
     }
 
-    handleLogout(){
+    handleLogout() {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.post('http://127.0.0.1:8000/api/logout', {},
         { headers: {"Authorization" : `Bearer ${JWTToken}`} })
@@ -47,7 +47,7 @@ class Index extends React.Component {
             })
     }
 
-    handleLogin(){
+    handleLogin() {
         this.setState({
             loggedIn: true,
         })

@@ -12,49 +12,16 @@ export default class RegisterForm extends React.Component {
             confirmPassword: '',
             redirect: false
         };
-        this.handleNameInput = this.handleNameInput.bind(this);
-        this.handlePasswordInput = this.handlePasswordInput.bind(this);
-        this.handleConfirmPasswordInput = this.handleConfirmPasswordInput.bind(this);
-        this.handleEmailInput = this.handleEmailInput.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-  
-    }
-    handleNameInput(event) {
-        this.setState({
-          name: event.target.value
-        });
-    }
-    handleEmailInput(event) {
-        this.setState({
-            email: event.target.value
-        });
-    }
-    handlePasswordInput(event) {
-        this.setState({
-            password: event.target.value
-        });
-    }
-    handleConfirmPasswordInput(event){
-        let password_confirm = document.getElementById('confirmPassword');
-        password_confirm.setCustomValidity('');
-        this.setState({
-            confirmPassword: event.target.value
-        });
     }
 
 
     handleSubmit(e) {
         e.preventDefault();
 
-        var canProceed = this.refs.password.checkValidity()
+        let canProceed = this.refs.password.checkValidity()
         && this.refs.passwordConfirm.checkValidity()
         && (this.state.password === this.state.confirmPassword);
-
-        let password_confirm = document.getElementById('confirmPassword');
-        password_confirm.setCustomValidity('');
-        if(this.state.password !== this.state.confirmPassword){
-            password_confirm.setCustomValidity('Passwords do not match.');
-        }
 
         if(canProceed) {
             axios.post('http://127.0.0.1:8000/api/register', {
@@ -63,7 +30,7 @@ export default class RegisterForm extends React.Component {
                 password: this.state.password,
                 password_confirmation: this.state.confirmPassword,
             })
-            .then(response=> {
+            .then(response => {
                 console.log(response);
                 alert('Success!');
                 this.setState({
@@ -100,7 +67,7 @@ export default class RegisterForm extends React.Component {
                             id="name"
                             type="text"
                             value={this.state.name}
-                            onChange={this.handleNameInput}
+                            onChange={(event) => { this.setState({ name: event.target.value })}}
                             className="form-control"
                             required />
                         </div>
@@ -111,7 +78,7 @@ export default class RegisterForm extends React.Component {
                             ref="email"
                             type="email"
                             value={this.state.email}
-                            onChange={this.handleEmailInput}
+                            onChange={(event) => { this.setState({ email: event.target.value })}}
                             className="form-control"
                             required />
                         </div>
@@ -123,7 +90,7 @@ export default class RegisterForm extends React.Component {
                             ref="password"
                             minLength="8"
                             value={this.state.password}
-                            onChange={this.handlePasswordInput}
+                            onChange={(event) => { this.setState({ password: event.target.value })}}
                             className="form-control"
                             required />
                         </div>
@@ -134,7 +101,7 @@ export default class RegisterForm extends React.Component {
                             ref="passwordConfirm"
                             type="password"
                             value={this.state.confirmPassword}
-                            onChange={this.handleConfirmPasswordInput}
+                            onChange={(event) => { this.setState({ confirmPassword: event.target.value })}}
                             className="form-control" 
                             required />
                         </div>

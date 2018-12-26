@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default class Navbar extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state={
             loggedIn: props.loggedIn,
@@ -9,7 +9,7 @@ export default class Navbar extends React.Component {
         };
     }
 
-    login(){
+    login() {
         return(
             <nav className="navbar navbar-expand navbar-light bg-light">
                 <h3>To-do</h3>
@@ -23,7 +23,7 @@ export default class Navbar extends React.Component {
             </nav>
         );
     }
-    logout(){
+    logout() {
         return(
             <nav className="navbar navbar-expand navbar-light bg-light">
                 <h3>To-do</h3>
@@ -41,7 +41,7 @@ export default class Navbar extends React.Component {
         );
     }
 
-    render(){
+    render() {
         if(this.props.loggedIn)
             return(this.logout());
         else return(this.login());

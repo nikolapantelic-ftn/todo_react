@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default class TodoApp extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             items: [],
@@ -12,7 +12,7 @@ export default class TodoApp extends React.Component {
         this.handleItemAdd = this.handleItemAdd.bind(this);
     }
     
-    componentDidMount(){
+    componentDidMount() {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.get('http://127.0.0.1:8000/api/todo', { 
             headers: {"Authorization" : `Bearer ${JWTToken}`} 
@@ -27,7 +27,7 @@ export default class TodoApp extends React.Component {
                 });
     }
 
-    handleItemDelete(index){
+    handleItemDelete(index) {
         const items = this.state.items.slice();
         items.splice(index, 1);
         this.setState({
@@ -35,7 +35,7 @@ export default class TodoApp extends React.Component {
         });
     }
 
-    handleItemAdd(){
+    handleItemAdd() {
         console.log("Addeeeeeed");
         let JWTToken = localStorage.getItem('JWTToken');
         axios.get('http://127.0.0.1:8000/api/todo', { headers: {"Authorization" : `Bearer ${JWTToken}`} })
@@ -49,7 +49,7 @@ export default class TodoApp extends React.Component {
                 });
     }
 
-    renderItem(item, index){
+    renderItem(item, index) {
         return <Item 
             key={item.id}
             item={item}
@@ -58,12 +58,12 @@ export default class TodoApp extends React.Component {
             />;
     }
 
-    renderTaskForm(){
+    renderTaskForm() {
         return <TaskForm 
             handleItemAdd={this.handleItemAdd}/>
     }
 
-    render(){
+    render() {
         return(
             <div className="d-flex justify-content-center">
                 <div className="col-sm-4 scroll">
@@ -163,7 +163,7 @@ class Item extends React.Component {
         this.submitCheckboxChange = this.submitCheckboxChange.bind(this);
     }
 
-    submitCheckboxChange(done){
+    submitCheckboxChange(done) {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
             is_done: done,
@@ -177,27 +177,27 @@ class Item extends React.Component {
         });
     }
 
-    handleCheckboxChange(event){
+    handleCheckboxChange(event) {
         this.setState({
             isDone: event.target.checked ? 1 : 0
         });
         this.submitCheckboxChange(event.target.checked);
     }
 
-    handleEditPress(){
+    handleEditPress() {
         this.setState({
             editMode: true
         });
     }
 
-    handleSavePress(){
+    handleSavePress() {
         this.setState({
             editMode: false
         });
         this.submitChanges();
     }
 
-    submitPriorityChange(p){
+    submitPriorityChange(p) {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
             priority: p,
@@ -211,14 +211,14 @@ class Item extends React.Component {
         });
     }
 
-    handlePriorityChange(event){
+    handlePriorityChange(event) {
         this.setState({
             priority: event.target.value
         });
         this.submitPriorityChange(event.target.value);
     }
 
-    submitChanges(event){
+    submitChanges(event) {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
             title: this.state.title,
@@ -233,19 +233,19 @@ class Item extends React.Component {
         });
     }
 
-    handleTitleChange(event){
+    handleTitleChange(event) {
         this.setState({
             title: event.target.value
         });
     }
 
-    handleContentChange(event){
+    handleContentChange(event) {
         this.setState({
             content: event.target.value
         });
     }
 
-    handleDeletePress(){
+    handleDeletePress() {
         let JWTToken = localStorage.getItem('JWTToken');
         axios.delete(`http://127.0.0.1:8000/api/todo/${this.state.id}`, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
         .then(function (response) {
@@ -258,7 +258,7 @@ class Item extends React.Component {
         this.props.handleItemDelete(this.props.index);
     }
 
-    render(){
+    render() {
         return(
             <div className="col">
                 {this.state.editMode ? (

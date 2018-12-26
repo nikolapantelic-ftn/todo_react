@@ -21,13 +21,13 @@ export default class LoginForm extends React.Component {
         });
     }
 
-    handlePasswordInput(event){
+    handlePasswordInput(event) {
         this.setState({
             password: event.target.value
         });
     }
 
-    handleSubmit(e){
+    handleSubmit(e) {
         e.preventDefault();
 
         axios.post('http://127.0.0.1:8000/api/login', {
@@ -46,7 +46,7 @@ export default class LoginForm extends React.Component {
             alert(error);
         });
     }
-    render(){
+    render() {
         return(
             <div className="d-flex justify-content-center">
                 <form onSubmit={this.handleSubmit}>
