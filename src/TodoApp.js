@@ -7,17 +7,36 @@ export default class TodoApp extends React.Component {
         super(props);
         this.state = {
             items: [],
-            title: '',
-            content: '',
         };
-        this.handleContentChange = this.handleContentChange.bind(this);
-        this.handleTitleChange = this.handleTitleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleItemDelete = this.handleItemDelete.bind(this);
         this.handleItemAdd = this.handleItemAdd.bind(this);
     }
     
     componentDidMount(){
+        let JWTToken = localStorage.getItem('JWTToken');
+        axios.get('http://127.0.0.1:8000/api/todo', { 
+            headers: {"Authorization" : `Bearer ${JWTToken}`} 
+        })
+                .then(response => {
+                    this.setState({
+                        items: response.data
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    }
+
+    handleItemDelete(index){
+        const items = this.state.items.slice();
+        items.splice(index, 1);
+        this.setState({
+            items
+        });
+    }
+
+    handleItemAdd(){
+        console.log("Addeeeeeed");
         let JWTToken = localStorage.getItem('JWTToken');
         axios.get('http://127.0.0.1:8000/api/todo', { headers: {"Authorization" : `Bearer ${JWTToken}`} })
                 .then(response => {
@@ -30,19 +49,58 @@ export default class TodoApp extends React.Component {
                 });
     }
 
-    handleTitleChange(event){
+    renderItem(item, index){
+        return <Item 
+            key={item.id}
+            item={item}
+            index={index}
+            handleItemDelete={this.handleItemDelete}
+            />;
+    }
+
+    renderTaskForm(){
+        return <TaskForm 
+            handleItemAdd={this.handleItemAdd}/>
+    }
+
+    render(){
+        return(
+            <div className="d-flex justify-content-center">
+                <div className="col-sm-4 scroll">
+                    {this.state.items.map((item, index) => this.renderItem(item, index))}
+                </div>
+                {this.renderTaskForm()}
+            </div>
+        );
+    }
+}
+
+class TaskForm extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            title: "",
+            content: ""
+        };
+        this.handleContentChange = this.handleContentChange.bind(this);
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    
+
+    handleTitleChange(event) {
         this.setState({
             title: event.target.value
         });
     }
 
-    handleContentChange(event){
+    handleContentChange(event) {
         this.setState({
             content: event.target.value
         });
     }
 
-    handleSubmit(e){
+    handleSubmit(e) {
         e.preventDefault();
         let JWTToken = localStorage.getItem('JWTToken');
         axios.post('http://127.0.0.1:8000/api/todo',  { 
@@ -62,76 +120,34 @@ export default class TodoApp extends React.Component {
                 console.log(error);
                 alert(error);
             })
-            this.handleItemAdd();
+            this.props.handleItemAdd();
     }
 
-    handleItemDelete(index){
-        const items = this.state.items.slice();
-        items.splice(index, 1);
-        this.setState({
-            items: items
-        })
-    }
-
-    handleItemAdd(){
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.get('http://127.0.0.1:8000/api/todo', { headers: {"Authorization" : `Bearer ${JWTToken}`} })
-                .then(response => {
-                    this.setState({
-                        items: response.data
-                    })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-    }
-
-    renderItem(item, index){
-        return <Item 
-            key={item.id}
-            id={item.id}
-            userId={item.user_id}
-            title={item.title}
-            content={item.content}
-            priority={item.priority}
-            isDone={item.is_done}
-            createdAt={item.created_at}
-            updatedAt={item.updated_at}
-            index={index}
-            handleItemDelete={this.handleItemDelete}
-            />;
-    }
-
-    render(){
+    render() {
         return(
-            <div className="d-flex justify-content-center">
-                <div className="col-sm-4 scroll">
-                        {this.state.items.map((item, index) => this.renderItem(item, index))}
-                </div>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="title">Title:</label>
-                    <input type="text" className="form-control" id="title" value={this.state.title} onChange={this.handleTitleChange}/>
-                    <label htmlFor="content">To-Do:</label>
-                    <textarea className="form-control" rows="3" id="content" value={this.state.content} onChange={this.handleContentChange}/>
-                    <button type="submit" className="btn btn-primary">Add Task</button>
-                </form>
-            </div>
+            <form onSubmit={this.handleSubmit}>
+                <label htmlFor="title">Title:</label>
+                <input type="text" className="form-control" id="title" value={this.state.title} onChange={this.handleTitleChange}/>
+                <label htmlFor="content">To-Do:</label>
+                <textarea className="form-control" rows="3" id="content" value={this.state.content} onChange={this.handleContentChange}/>
+                <button type="submit" className="btn btn-primary">Add Task</button>
+            </form>
         );
     }
 }
 
 class Item extends React.Component {
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
         this.state = {
-            id: props.id,
-            userId: props.userId,
-            title: props.title,
-            content: props.content,
-            priority: props.priority,
-            isDone: props.isDone,
-            createdAt: props.createdAt,
-            updatedAt: props.updatedAt,
+            id: props.item.id,
+            userId: props.item.userId,
+            title: props.item.title,
+            content: props.item.content,
+            priority: props.item.priority,
+            isDone: props.item.isDone,
+            createdAt: props.item.createdAt,
+            updatedAt: props.item.updatedAt,
             editMode: false,
         };
 
@@ -163,7 +179,7 @@ class Item extends React.Component {
 
     handleCheckboxChange(event){
         let done = event.target.checked
-        if(done === true){
+        if(done){
             this.setState({
                 isDone: 1
             });
