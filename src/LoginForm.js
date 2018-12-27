@@ -28,7 +28,7 @@ export default class LoginForm extends React.Component {
         return(
             <div className="d-flex justify-content-center">
                 <form onSubmit={this.handleSubmit}>
-                    <div className="col">
+                    <div>
                         <div>
                             <label htmlFor="email" className="col-form-label">Email</label>
                             <input  

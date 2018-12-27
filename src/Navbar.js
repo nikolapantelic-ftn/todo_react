@@ -25,7 +25,10 @@ export default class Navbar extends React.Component {
                             Logged in as: {this.props.name}
                         </div>
                     ) : (
+                        <div className="row">
                         <a className="nav-link" href="/register">Register</a>
+                        <a className="nav-link" href="/">Login</a>
+                        </div>
                     )}
                     
                 </div>

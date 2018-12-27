@@ -242,58 +242,66 @@ class Item extends React.Component {
                     <h3>{this.state.title}</h3>
                 )}
                 <div className="row">
-                <div className="col">
-                {this.state.editMode ? (
-                    <textarea 
-                        className="form-control" 
-                        rows="3" 
-                        id="content" 
-                        value={this.state.content} 
-                        onChange={(event) => { this.setState({ content: event.target.value })}}
-                    />
-                ) : (
-                    <p>{this.state.content}</p>
-                )}
-                </div>
-                <div className="col">
-                {this.state.editMode ? (
-                    <button 
-                        id="save" 
-                        type="button" 
-                        className="btn btn-success" 
-                        onClick={this.handleSavePress}
-                    > Save </button>
-                ) : (
-                    <div>
-                        <button 
-                            id="edit" 
-                            type="button" 
-                            className="btn btn-primary" 
-                            onClick={(event) => { this.setState({ editMode: true })}}
-                        > Edit </button>
-                        <button 
-                            id="delete" 
-                            type="button" 
-                            className="btn btn-danger" 
-                            onClick={this.handleDeletePress}
-                        > Delete </button>
+                    <div className="col">
+                        {this.state.editMode ? (
+                            <textarea 
+                                className="form-control" 
+                                rows="3" 
+                                id="content" 
+                                value={this.state.content} 
+                                onChange={(event) => { this.setState({ content: event.target.value })}}
+                            />
+                        ) : (
+                            <p>{this.state.content}</p>
+                        )}
                     </div>
-                )}
+                    <div className="col">
+                        {this.state.editMode ? (
+                            <button 
+                                id="save" 
+                                type="button" 
+                                className="btn btn-success" 
+                                onClick={this.handleSavePress}
+                            > Save </button>
+                        ) : (
+                        <div>
+                            <button 
+                                id="edit" 
+                                type="button" 
+                                className="btn btn-primary" 
+                                onClick={(event) => { this.setState({ editMode: true })}}
+                            > Edit </button>
+                            <button 
+                                id="delete" 
+                                type="button" 
+                                className="btn btn-danger" 
+                                onClick={this.handleDeletePress}
+                            > Delete </button>
+                        </div>
+                        )}
+                    </div>
                 </div>
-                </div>
-                <select id="priority" className="form-control form-control-lg" defaultValue={this.state.priority} onChange={this.handlePriorityChange}>
-                    <option value="0">High</option>
-                    <option value="1">Medium</option>
-                    <option value="2">Low</option>
-                </select>
-                <label htmlFor="isDone">Done</label>
-                <input 
-                    className="form-check-input" 
-                    type="checkbox" 
-                    id="isDone" 
-                    checked={this.state.isDone} 
-                    onChange={this.handleCheckboxChange}
-                />
+                <div className="row">
+                    <div className="col-sm-2">
+                        <label htmlFor="priority">Priority: </label>
+                    </div>
+                    <div className="col">
+                        <select id="priority" className="form-control form-control-md" defaultValue={this.state.priority} onChange={this.handlePriorityChange}>
+                            <option value="0">High</option>
+                            <option value="1">Medium</option>
+                            <option value="2">Low</option>
+                        </select>
+                    </div>
+                </div>  
+                    <input 
+                        className="form-check-input" 
+                        type="checkbox" 
+                        id="isDone" 
+                        checked={this.state.isDone} 
+                        onChange={this.handleCheckboxChange}
+                    />
+                    <label htmlFor="isDone">Done</label>
+                <hr/>
             </div>
         );
     }

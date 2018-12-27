@@ -44,7 +44,7 @@ export default class RegisterForm extends React.Component {
             <div className="d-flex justify-content-center">
             {this.renderRedirect()}
                 <form onSubmit={this.handleSubmit}>
-                    <div className="col">
+                    <div>
                         <div>
                             <label htmlFor="name" className="col-form-label">Name</label>
                             <input
