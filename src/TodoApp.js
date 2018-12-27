@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { apiService } from './services/ApiService';
 
 export default class TodoApp extends React.Component {
@@ -14,7 +13,6 @@ export default class TodoApp extends React.Component {
     }
     
     componentDidMount() {
-
         apiService.getItems()
                 .then(response => {
                     this.setState({
@@ -99,7 +97,7 @@ class TaskForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        apiService.addItem(this.state)
+        apiService.add(this.state)
             .then(response => {
                 this.setState({
                     title: '',
@@ -136,12 +134,14 @@ class Item extends React.Component {
             content: props.item.content,
             priority: props.item.priority,
             isDone: props.item.is_done,
+            public: props.item.public,
             createdAt: props.item.createdAt,
             updatedAt: props.item.updatedAt,
             editMode: false,
         };
 
-        this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
+        this.handleDoneCheckboxChange = this.handleDoneCheckboxChange.bind(this);
+        this.handlePublicCheckboxChange = this.handlePublicCheckboxChange.bind(this);
         this.handlePriorityChange = this.handlePriorityChange.bind(this);
         this.handleSavePress = this.handleSavePress.bind(this);
         this.submitChanges = this.submitChanges.bind(this);
@@ -150,11 +150,11 @@ class Item extends React.Component {
         this.submitCheckboxChange = this.submitCheckboxChange.bind(this);
     }
 
-    submitCheckboxChange(done) {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
-            is_done: done,
-        }, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+    submitCheckboxChange(isDone, isPublic) {
+        apiService.edit(this.state.id, { 
+            is_done: isDone, 
+            public: isPublic
+        })
         .then(function (response) {
             console.log(response);
         })
@@ -164,11 +164,18 @@ class Item extends React.Component {
         });
     }
 
-    handleCheckboxChange(event) {
+    handleDoneCheckboxChange(event) {
         this.setState({
             isDone: event.target.checked ? 1 : 0
         });
-        this.submitCheckboxChange(event.target.checked);
+        this.submitCheckboxChange(event.target.checked, this.state.public);
+    }
+
+    handlePublicCheckboxChange(event) {
+        this.setState({
+            public: event.target.checked ? 1 : 0
+        });
+        this.submitCheckboxChange(this.state.isDone, event.target.checked);
     }
 
     handleSavePress() {
@@ -178,11 +185,8 @@ class Item extends React.Component {
         this.submitChanges();
     }
 
-    submitPriorityChange(p) {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
-            priority: p,
-        }, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+    submitPriorityChange(priority) {
+        apiService.edit(this.state.id, { priority: priority })
         .then(function (response) {
             console.log(response);
         })
@@ -200,11 +204,10 @@ class Item extends React.Component {
     }
 
     submitChanges(event) {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.put(`http://127.0.0.1:8000/api/todo/${this.state.id}`, {
-            title: this.state.title,
-            content: this.state.content
-        }, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+        apiService.edit(this.state.id, { 
+                title: this.state.title,
+                content: this.state.content
+        })
         .then(function (response) {
             console.log(response);
         })
@@ -215,8 +218,7 @@ class Item extends React.Component {
     }
 
     handleDeletePress() {
-        let JWTToken = localStorage.getItem('JWTToken');
-        axios.delete(`http://127.0.0.1:8000/api/todo/${this.state.id}`, { headers: {"Authorization" : `Bearer ${JWTToken}`} })
+        apiService.delete(this.state.id)
         .then(function (response) {
             console.log(response);
         })
@@ -292,15 +294,29 @@ class Item extends React.Component {
                             <option value="2">Low</option>
                         </select>
                     </div>
-                </div>  
-                    <input 
-                        className="form-check-input" 
-                        type="checkbox" 
-                        id="isDone" 
-                        checked={this.state.isDone} 
-                        onChange={this.handleCheckboxChange}
-                    />
-                    <label htmlFor="isDone">Done</label>
+                </div>
+                    <div className="row">
+                        <div className="col">
+                            <input 
+                                className="form-check-input" 
+                                type="checkbox" 
+                                id="isDone" 
+                                checked={this.state.isDone} 
+                                onChange={this.handleDoneCheckboxChange}
+                            />
+                            <label htmlFor="isDone">Done</label>
+                        </div>
+                        <div className="col">
+                            <input 
+                                className="form-check-input" 
+                                type="checkbox" 
+                                id="public" 
+                                checked={this.state.public} 
+                                onChange={this.handlePublicCheckboxChange}
+                            />
+                            <label htmlFor="public">Public</label>
+                        </div>
+                    </div>
                 <hr/>
             </div>
         );

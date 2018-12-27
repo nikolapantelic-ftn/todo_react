@@ -6,6 +6,7 @@ import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import TodoApp from './TodoApp';
 import Navbar from './Navbar';
+import PublicTodos from './PublicTodos'
 
 class Index extends React.Component {
     constructor(props) {
@@ -76,6 +77,7 @@ class Index extends React.Component {
                         ))}
                     />
                     <Route path="/register" component={RegisterForm} />
+                    <Route path="/todos" component={PublicTodos} />
                 </div>
             </Router>
             </div>

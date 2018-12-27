@@ -32,17 +32,29 @@ export default class ApiService {
         return axios.get('todo');
     }
 
+    getAllItems() {
+        return axios.get('indexPublic');
+    }
+
     getUser() {
         return  axios.post('me');
     }
 
-    addItem(data) {
+    add(data) {
         return axios.post('todo',  { 
             title: data.title,
             content: data.content,
             priority: 1,
             is_done: 0
         });
+    }
+
+    edit(id, data) {
+        return axios.put(`todo/${id}`, data);
+    }
+
+    delete(id) {
+        return axios.delete(`todo/${id}`);
     }
 }
 
