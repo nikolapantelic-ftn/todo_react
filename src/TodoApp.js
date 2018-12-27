@@ -169,7 +169,6 @@ class Item extends React.Component {
             isDone: event.target.checked ? 1 : 0
         });
         this.submitCheckboxChange(event.target.checked);
-        console.log(event.target.checked);
     }
 
     handleSavePress() {

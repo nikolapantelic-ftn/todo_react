@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { apiService } from './services/ApiService';
 
 export default class LoginForm extends React.Component {
@@ -16,9 +15,7 @@ export default class LoginForm extends React.Component {
         e.preventDefault();
 
         apiService.login(this.state)
-            .then(response => {
-                localStorage.setItem('JWTToken', response.data.access_token);
-                axios.defaults.headers.common['Authorization'] = `bearer ${localStorage.getItem('JWTToken')}`;
+            .then(() => {
                 alert('Successfully logged in!');
                 this.props.handleLogin();
             })

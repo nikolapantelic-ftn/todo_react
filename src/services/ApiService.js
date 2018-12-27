@@ -17,7 +17,11 @@ export default class ApiService {
 
     login(data) {
         const { email, password } = data;
-        return axios.post('login', { email, password });
+        return axios.post('login', { email, password })
+            .then( response => {
+                localStorage.setItem('JWTToken', response.data.access_token);
+                axios.defaults.headers.common['Authorization'] = `bearer ${localStorage.getItem('JWTToken')}`;
+            });
     }
 
     logout() {
