@@ -10,27 +10,35 @@ export default class RegisterForm extends React.Component {
             email: '',
             password: '',
             passwordConfirmation: '',
-            redirect: false
+            redirect: false,
+            errors: []
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    hasErrors(field) {
+        return !!this.state.errors[field];
+    }
+
+    firstError(field) {
+        return this.hasErrors(field) ? this.state.errors[field][0] : '';
+    }
+
+    clearErrors(field) {
+        this.hasErrors(field) && delete this.state.errors[field];
+    }
+
     handleSubmit(e) {
         e.preventDefault();
-        let canProceed = this.refs.password.checkValidity()
-        && this.refs.passwordConfirmation.checkValidity()
-        && (this.state.password === this.state.passwordConfirmation);
 
-        if(canProceed) {
             apiService.register(this.state)
                 .then(response => {
                     this.setState({redirect: true});
                 })
                 .catch(error => {
                     this.setState({redirect: false});
-                    console.log(error);
+                    this.setState({errors: error.response.data.errors});
                 });
-        }
     }
 
     renderRedirect() {
@@ -63,10 +71,18 @@ export default class RegisterForm extends React.Component {
                                 ref="email"
                                 type="email"
                                 value={this.state.email}
-                                onChange={(event) => { this.setState({ email: event.target.value })}}
+                                onChange={
+                                    (event) => { 
+                                        this.setState({ email: event.target.value });
+                                        this.clearErrors('email');
+                                    }
+                                }
                                 className="form-control"
                                 required 
                             />
+                            <div>
+                                {this.firstError('email')}
+                            </div>
                         </div>
                         <div>
                             <label htmlFor="password" className="col-form-label">Password</label>
@@ -88,10 +104,18 @@ export default class RegisterForm extends React.Component {
                                 ref="passwordConfirmation"
                                 type="password"
                                 value={this.state.passwordConfirmation}
-                                onChange={(event) => { this.setState({ passwordConfirmation: event.target.value })}}
+                                onChange={
+                                    (event) => { 
+                                        this.setState({ passwordConfirmation: event.target.value });
+                                        this.clearErrors('password');
+                                    }
+                                }
                                 className="form-control" 
                                 required 
                             />
+                            <div>
+                                {this.firstError('password')}
+                            </div>
                         </div>
                         <button 
                             type="submit" 

@@ -19,9 +19,9 @@ export default class LoginForm extends React.Component {
                 alert('Successfully logged in!');
                 this.props.handleLogin();
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
-                alert(error);
+                alert("Invalid Email or Password!");
             });
     }
     render() {
